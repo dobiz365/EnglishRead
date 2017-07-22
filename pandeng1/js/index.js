@@ -11,7 +11,7 @@
 window.onload=init;
 
 var mp3=null,cur_name='';
-var progress_dom,text_dom;
+var progress_dom,text_dom,cur_progress;
 var state='stop';
 
 function init(){
@@ -29,10 +29,11 @@ function play(e){
 	var fname=li.getAttribute('data');
 	if(cur_name!=fname){
 		if(cur_name!=''){//还原进度为0
-			var idx=parseInt(cur_name)-1;
-			var prog=progress_dom[idx];
-			prog.style.width='0%';
+			cur_progress.style.width='0%';
 		}
+		var div=siblings(li);
+		cur_progress=div[0];
+		
 		mp3.src='mp3/'+fname+'.mp3';
 		mp3.play();
 		cur_name=fname;
@@ -56,10 +57,17 @@ function check(){
 		var duration=mp3.duration;
 		if(duration){//时长可用
 			var time=mp3.currentTime;
-			var idx=parseInt(cur_name)-1;
-			var prog=progress_dom[idx];
-			prog.style.width=(time/duration)*100+'%';
+			cur_progress.style.width=(time/duration)*100+'%';
 			
 		}
 	}
+}
+
+function siblings(elm) {
+	var a = [];
+	var p = elm.parentNode.children;
+	for(var i =0,pl= p.length;i<pl;i++) {
+		if(p[i] !== elm) a.push(p[i]);
+	}
+	return a;
 }
